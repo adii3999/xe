@@ -27,7 +27,7 @@ app.get('/api/v1/shops/nearby', async (_req, res) => {
       include: { shop: true },
     });
     return res.json({
-      items: products.map((p) => ({
+      items: products.map((p: any) => ({
         id: p.id,
         name: p.name,
         price: p.price,
@@ -65,7 +65,7 @@ app.get('/api/v1/products', async (_req, res) => {
       include: { shop: true },
     });
     return res.json({
-      items: products.map((p) => ({
+      items: products.map((p: any) => ({
         id: p.id,
         name: p.name,
         price: p.price,
