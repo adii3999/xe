@@ -1,0 +1,43 @@
+version: '3.9'
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: marketplace
+      POSTGRES_USER: marketplace
+      POSTGRES_PASSWORD: marketplace
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: ./services/api
+    environment:
+      PORT: 3000
+      DATABASE_URL: postgresql://marketplace:marketplace@db:5432/marketplace
+      JWT_SECRET: dev-secret-change-me
+      FAST2SMS_API_KEY: ""
+      FAST2SMS_ROUTE: "q"
+      FAST2SMS_SENDER_ID: ""
+      FAST2SMS_ENTITY_ID: ""
+      FAST2SMS_TEMPLATE_ID: ""
+      FAST2SMS_MESSAGE_TEMPLATE: "Your OTP is {otp}"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+
+  admin:
+    build:
+      context: ./apps/admin
+    environment:
+      VITE_API_URL: http://localhost:3000
+    ports:
+      - "5174:80"
+    depends_on:
+      - api
+
+volumes:
+  db_data:
